@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macarena Bar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* LOGO PRINCIPAL */
+        .logo {
+            width: 220px;
+            margin-bottom: 50px;
+            z-index: 2;
+        }
+
+        /* BOTONES ESTILO DORADO */
+        .btn {
+            width: 220px;
+            padding: 14px;
+            margin: 10px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #c8a74d, #f5d76e);
+            color: black;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 2;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #f5d76e, 0 0 40px #c8a74d;
+        }
+
+        .link {
+            margin-top: 15px;
+            color: rgb(0, 140, 255);
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        /* PANELES DESLIZABLES */
+        .panel {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .panel.active {
+            bottom: 0;
+        }
+
+        /* LOGO DE FONDO (PNG) */
+        .bg-logo {
+            position: absolute;
+            width: 80%;
+            opacity: 0.15;
+            filter: blur(6px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .input-group {
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 30px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+        }
+
+        /* MODAL INFO */
+        .info-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .info-box {
+            background: rgba(184, 152, 72, 0.5);
+            padding: 25px;
+            border-radius: 25px;
+            width: 85%;
+            max-width: 350px;
+            color: white;
+            text-align: left;
+        }
+
+        /* CARD VERIFICACIÓN */
+        .verification-card {
+            background: rgba(184, 153, 72, 0.9);
+            width: 90%;
+            max-width: 350px;
+            padding: 30px 20px;
+            border-radius: 40px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            text-align: center;
+            z-index: 1;
+        }
+
+        .code-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .code-input {
+            width: 40px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(to bottom, #777, #333);
+            border: 1px solid #999;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+
+        .close {
+            margin-top: 30px;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 11;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="macarena bar.png" class="logo">
+    <button class="btn" onclick="showPanel('loginPanel')">INICIAR SESIÓN</button>
+    <button class="btn" onclick="showPanel('registerPanel')">REGISTRARSE</button>
+    <a class="link" onclick="toggleInfo(true)">¿Cómo Registrarse?</a>
+
+    <div class="panel" id="loginPanel">
+        <img src="macarena bar.png" class="bg-logo">
+        <h2>INICIAR SESIÓN</h2>
+        <div class="input-group">
+            <input type="text" id="loginUser" placeholder="Usuario o Correo">
+        </div>
+        <div class="input-group">
+            <input type="password" id="loginPass" placeholder="Contraseña">
+        </div>
+        <button class="btn" onclick="alert('Iniciando sesión...')">ENTRAR</button>
+        <div class="close" onclick="hidePanels()">Cerrar</div>
+    </div>
+
+    <div class="panel" id="registerPanel">
+        <img src="macarena bar.png" class="bg-logo">
+        <h2>REGISTRO</h2>
+        <div class="input-group"><input type="text" id="regName" placeholder="Nombre/Usuario"></div>
+        <div class="input-group"><input type="email" id="regEmail" placeholder="Correo"></div>
+        <div class="input-group"><input type="password" id="regPass" placeholder="Contraseña"></div>
+        <div class="input-group">
+            <input type="tel" id="regPhone" placeholder="Teléfono (10 dígitos)" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+        </div>
+        <button class="btn" onclick="goToVerify()">REGISTRARSE</button>
+        <div class="close" onclick="hidePanels()">Cerrar</div>
+    </div>
+
+    <div class="panel" id="verifyPanel">
+        <img src="macarena bar.png" class="bg-logo">
+        <div class="verification-card">
+            <h2 style="font-size: 18px; margin-bottom: 10px;">REGISTRO</h2>
+            <p style="font-size: 14px;">Te enviamos un código de 6 dígitos por SMS para confirmar tu registro.</p>
+            <div class="code-container">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+                <input type="text" maxlength="1" class="code-input">
+            </div>
+            <button class="btn" style="width: 140px;" onclick="finishRegistration()">CONFIRMAR</button>
+        </div>
+        <div class="close" onclick="hidePanels()">Cerrar</div>
+    </div>
+
+    <div class="info-overlay" id="infoOverlay">
+        <div class="info-box">
+            <h2 style="text-align:center; margin-bottom:15px">PASOS PARA REGISTRO</h2>
+            <p><strong>1. DATOS:</strong> Llena nombre, correo, clave y celular.</p><br>
+            <p><strong>2. SMS:</strong> Ingresa el código de 6 dígitos enviado para el registro.</p><br>
+            <p><strong>3. ACCESO:</strong> ¡Inicia sesión, reserva y disfruta!</p><br>
+            <button class="btn" style="width:100%; margin:0" onclick="toggleInfo(false)">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <script>
+        // Función corregida para mostrar paneles
+        function showPanel(id) {
+            hidePanels(); // Asegura que otros estén cerrados antes
+            document.getElementById(id).classList.add('active');
+        }
+
+        // Función corregida para cerrar todos los paneles
+        function hidePanels() {
+            const panels = document.querySelectorAll('.panel');
+            panels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+        }
+
+        function toggleInfo(show) {
+            document.getElementById('infoOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function goToVerify() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+
+            if(!name || !email || !pass || !phone || phone.length !== 10) {
+                alert("❌ Por favor completa todos los campos (Teléfono a 10 dígitos).");
+                return;
+            }
+            showPanel('verifyPanel');
+        }
+
+        function finishRegistration() {
+            alert("✅ Tu cuenta se ha creado con éxito.");
+            showPanel('loginPanel');
+        }
+
+        const inputs = document.querySelectorAll('.code-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, ''); 
+                if (e.target.value && index < inputs.length - 1) inputs[index + 1].focus();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus();
+            });
+        });
+    </script>
+</body>
+</html>
