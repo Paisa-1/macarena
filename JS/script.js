@@ -1,4 +1,3 @@
-const urlDestino = "https://kenimarquines-cyber.github.io/INICIO/";
 
 function showPanel(id) {
     document.getElementById(id).classList.add('active');
