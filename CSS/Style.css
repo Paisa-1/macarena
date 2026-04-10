@@ -1,0 +1,49 @@
+:root {
+    --neon-cyan: #00f3ff;
+    --champagne-main: #f3e5ab;
+    --champagne-bright: #ffffff;
+    --champagne-dark: #b89b5e;
+    --gold-gradient: linear-gradient(45deg, #c8a74d, #f5d76e);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lexend', sans-serif;
+}
+
+body {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: black;
+    min-height: 100vh;
+}
+
+.logo {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 15px;
+    border-radius: 40px;
+    background: var(--gold-gradient);
+    border: none;
+    cursor: pointer;
+}
+
+.panel {
+    position: fixed;
+    bottom: -100%;
+    width: 100%;
+    height: 100%;
+    background: black;
+    transition: 0.5s;
+}
+
+.panel.active {
+    bottom: 0;
+}
